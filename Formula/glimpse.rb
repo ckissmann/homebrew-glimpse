@@ -3,20 +3,20 @@ class Glimpse < Formula
   homepage "https://github.com/ckissmann/glimpse"
   url "https://github.com/ckissmann/glimpse/archive/refs/tags/v2026.2.14.17.tar.gz"
   sha256 "aeaef4fbf44119ebe95df7860531d720c5cc01f9c33cc2b46f697095dcf9b596"
-  license "MIT"
-  
-  depends_on "rust" => :build
+
+   on_macos do
+    if Hardware::CPU.arm?
+      url "https://github.com/ckissmann/glimpse/releases/download/v2026.2.14.17/glimpse-1.0.0-macos-arm"
+      sha256 "sha256:b5fdfa258eb9c30ecaa9cf2df2134ad55933c2970ba0bb32767fe8716270f495"
+    else
+      url "https://github.com/ckissmann/glimpse/releases/download/v2026.2.14.17/glimpse-1.0.0-macos-intel"
+      sha256 "sha256:11d8808572f96de5426255ee0de8d28f8dd36e80c8029aa2b7a7ce30b0888629"
+    end
+  end
 
   def install
-    # Build für macOS mit optimierten Flags
-    system "cargo", "build", "--release", "--locked"
-    
-    # Installiere die Binary
-    bin.install "target/release/glimpse"
-    
-    # Falls du Libraries hast, installiere sie auch
-    # lib.install "target/release/libglimpse.dylib" if File.exist?("target/release/libglimpse.dylib")
-    # lib.install "target/release/libglimpse.a" if File.exist?("target/release/libglimpse.a")
+    bin.install "glimpse-1.0.0-macos-arm" => "glimpse" if Hardware::CPU.arm?
+    bin.install "glimpse-1.0.0-macos-intel" => "glimpse" unless Hardware::CPU.arm?
   end
 
   test do
