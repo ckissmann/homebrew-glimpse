@@ -8,7 +8,15 @@ class Glimpse < Formula
   depends_on "rust" => :build
 
   def install
-    system "cargo", "install", "--locked", "--root", prefix, "--path", "."
+    # Build für macOS mit optimierten Flags
+    system "cargo", "build", "--release", "--locked"
+    
+    # Installiere die Binary
+    bin.install "target/release/glimpse"
+    
+    # Falls du Libraries hast, installiere sie auch
+    # lib.install "target/release/libglimpse.dylib" if File.exist?("target/release/libglimpse.dylib")
+    # lib.install "target/release/libglimpse.a" if File.exist?("target/release/libglimpse.a")
   end
 
   test do
